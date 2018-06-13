@@ -12,7 +12,3 @@ gem 'guard-rspec', require: false
 gem 'guard-rubocop', require: false
 gem 'rubocop'
 gem 'rubocop-rspec'
-
-gem 'rspec'
-# Code coverage for Ruby
-gem 'simplecov', require: false
