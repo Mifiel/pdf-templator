@@ -13,6 +13,7 @@ Metrics/BlockLength:
   Exclude:
     - Guardfile
     - 'spec/**/*'
+    - '*.gemspec'
 
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: consistent_comma

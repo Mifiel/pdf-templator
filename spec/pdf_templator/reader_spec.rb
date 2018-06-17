@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require './lib/pdf_templator'
-
 RSpec.describe PdfTemplator::Reader do
   subject(:reader) do
     footer = { left: 'left text', center: 'centered text', right: 'right text' }

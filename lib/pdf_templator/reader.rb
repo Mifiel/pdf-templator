@@ -2,7 +2,6 @@
 
 require 'nokogiri'
 require 'wicked_pdf'
-require 'money'
 
 module PdfTemplator
   class Reader
