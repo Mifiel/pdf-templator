@@ -13,8 +13,8 @@ module PdfTemplator
   #   Slop.string_to_type("some_thing") #=> "SomeThingType"
   #
   # Returns a camel-cased class looking string with Type suffix.
-  def self.string_to_type(s)
-    s.to_s.gsub(/(?:^|_)([a-z])/) { $1.capitalize } + 'Type'
+  def self.string_to_type(string)
+    string.to_s.gsub(/(?:^|_)([a-z])/) { Regexp.last_match(1).capitalize } + 'Type'
   end
 
   # Example:
@@ -23,7 +23,7 @@ module PdfTemplator
   #   Slop.string_to_type_class("foo")    #=> uninitialized constant FooType
   #
   # Returns the full qualified type class. Uses `#string_to_type`.
-  def self.string_to_type_class(s)
-    const_get(string_to_type(s))
+  def self.string_to_type_class(string)
+    const_get(string_to_type(string))
   end
 end
