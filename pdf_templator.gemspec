@@ -33,10 +33,11 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'activesupport'
   spec.add_dependency 'money'
   spec.add_dependency 'nokogiri'
+  spec.add_dependency 'numbers_and_words'
   spec.add_dependency 'wicked_pdf'
   # 0.12.4 introduced a bug that rendered super a small font
-  spec.add_dependency 'wkhtmltopdf-binary', '< 0.12.3.1'
   spec.add_dependency 'slop', '~> 4.6'
+  spec.add_dependency 'wkhtmltopdf-binary', '< 0.12.3.1'
 
   spec.add_development_dependency 'bundler', '~> 1.16'
   spec.add_development_dependency 'rake', '~> 10.0'

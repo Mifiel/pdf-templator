@@ -50,8 +50,9 @@ module PdfTemplator
       nokogiri_fields.each do |field|
         name = field.attr('name')
         type = field.attr('type')
+        args = extract_args(field)
         value = field.text
-        @fields[name.to_sym] = { type: type, value: value, name: name }
+        @fields[name.to_sym] = { type: type, value: value, name: name, args: args }
       end
       @fields
     end
@@ -87,7 +88,8 @@ module PdfTemplator
         field_selector = "field[name=#{k}]"
         doc.css(field_selector).each do |field|
           new_node = doc.create_element('strong')
-          new_node.content = format_content(field.attr('type'), v)
+          args = extract_args(field)
+          new_node.content = format_content(field.attr('type'), args, v)
           field.replace(new_node)
         end
       end
@@ -109,18 +111,24 @@ module PdfTemplator
 
   private
 
+    def extract_args(field)
+      data_attrs = field.attributes.select { |atr| atr.start_with?('data-') }
+      data_attrs.values.map { |atr| [atr.name.gsub('data-', ''), atr.value] }.to_h
+    end
+
     # Cleans fields (lowercase, removes spaces and changes for underscores)
     def clean_fields(fields)
       fields.map { |k, v| [k.to_s.downcase.gsub(/ |-/, '_'), v] }.to_h
     end
 
     # Build content depending on the type
-    # @param type [String] One of text|number|money|date
+    # @param type [String] One of text|number|money|date|accounting
+    # @param args [Hash] Extra variables to pass to the formatter
     # @param content [String] The content to be formatted
     #
     # @return [String] The formatted content
-    def format_content(type, content)
-      Formatter.new(content).format(type)
+    def format_content(type, args, content)
+      Formatter.new(content).apply(type, args)
     end
 
     def doc
