@@ -1,5 +1,9 @@
 # PDF Templator
 
+[![Gem Version][rubygems-image]][rubygems-url]
+[![Build Status][travis-image]][travis-url]
+[![Coverage Status][coverage-image]][coverage-url]
+
 Create PDFs from HTML templates in a breeze.
 
 ## Features
@@ -83,3 +87,10 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pdf_templator.
+
+[rubygems-image]: https://badge.fury.io/rb/pdf_templator.svg
+[rubygems-url]: https://badge.fury.io/rb/pdf_templator
+[travis-image]: https://travis-ci.org/Mifiel/pdf-templator.svg?branch=master
+[travis-url]: https://travis-ci.org/Mifiel/pdf-templator
+[coverage-image]: https://coveralls.io/repos/github/Mifiel/pdf-templator/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/Mifiel/pdf-templator?branch=master
