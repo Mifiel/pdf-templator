@@ -48,7 +48,7 @@ module PdfTemplator
       return @fields if @fields
       @fields = {}
       nokogiri_fields.each do |field|
-        name = field.attr('name')
+        name = field.attr('name').downcase.gsub(/ |-/, '_')
         type = field.attr('type')
         args = extract_args(field)
         value = field.text
@@ -85,11 +85,12 @@ module PdfTemplator
 
     def replace_fields(fields)
       fields.each do |k, v|
+        k = k.downcase.gsub(/ |-/, '_')
         field_selector = "field[name=#{k}]"
         doc.css(field_selector).each do |field|
-          new_node = doc.create_element('strong')
+          new_node = doc.create_element('span')
           args = extract_args(field)
-          new_node.content = format_content(field.attr('type'), args, v)
+          new_node.add_child(format_content(field.attr('type'), args, v))
           field.replace(new_node)
         end
       end
