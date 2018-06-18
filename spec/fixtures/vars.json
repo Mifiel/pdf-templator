@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "date": "May 15, 2018",
+    "organization_name_1": "My Organization",
+    "legal_name_1": "My Organization Inc.",
+    "organization_name_2": "Your Organization",
+    "legal_name_2": "Your Organization Inc.",
+    "service_name": "API Gateway"
+  },
+  "footer": {
+    "right": "Página [page] de [topage]"
+  }
+}
