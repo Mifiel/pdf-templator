@@ -1,0 +1,75 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'pdf_templator'
+require 'slop'
+require 'rake'
+require 'json'
+
+module Slop
+  NonExistentFile = Class.new Error
+
+  class FileOption < StringOption
+    attr_reader :content
+
+    def call(value)
+      fail NonExistentFile, "File '#{value}' does not exist" unless File.exist?(value)
+      self.content = File.read(value)
+      self.value = value
+    end
+
+  private
+
+    attr_writer :content
+  end
+
+  class JsonOption < FileOption
+    def call(value)
+      super
+      self.content = JSON.parse(content, symbolize_names: true)
+      self.value = value
+    end
+  end
+end
+
+opts = Slop::Options.new
+opts.banner = 'Usage: pdftemplator [options]'
+opts.file '--template', 'The path of the HTML/ERB template', required: true
+opts.json '--in', 'The json with the variables to inject into the template', required: true
+opts.string '--out', 'The path of the output PDF to be saved'
+opts.on '-v', '--version', 'print the version' do
+  puts PdfTemplator::VERSION
+  exit
+end
+opts.on '--help', 'prints this help' do
+  puts opts
+  exit
+end
+
+begin
+  parser = Slop::Parser.new(opts)
+  result = parser.parse(ARGV)
+
+  vars = result.option(:in)
+  template = result.option(:template)
+
+  fields = vars.content[:fields]
+  footer = vars.content[:footer]
+  content = template.content
+
+  result[:out] ||= template.value.pathmap('%X.pdf')
+
+  reader = PdfTemplator::Reader.new(content: content, footer: footer)
+
+  pdf = reader.write(fields)
+  File.open(result[:out], 'wb') { |f| f.write(pdf) }
+  puts "PDF Generated in '#{result[:out]}'"
+rescue PdfTemplator::Reader::FieldsMismatchError => e
+  puts "Error: #{e.message}"
+  exit 1
+rescue Slop::MissingRequiredOption, Slop::NonExistentFile, Slop::UnknownOption => e
+  puts "Error: #{e.message}"
+  puts ''
+  puts opts
+  exit 1
+end

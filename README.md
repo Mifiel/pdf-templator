@@ -1,8 +1,18 @@
-# PdfTemplator
+# PDF Templator
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/pdf_templator`. To experiment with that code, run `bin/console` for an interactive prompt.
+[![Gem Version][rubygems-image]][rubygems-url]
+[![Build Status][travis-image]][travis-url]
+[![Coverage Status][coverage-image]][coverage-url]
 
-TODO: Delete this and the text above, and describe your gem
+Create PDFs from HTML templates in a breeze.
+
+## Features
+
+- Create a single HTML with `<field>` tags and PDF Templator will fill them for you.
+- Field types include `date`, `number`, `date`, `money`, `accounting`.
+- Create your own field type.
+- Usage as a CLI in case you're not working on Ruby.
+- It uses [wicked_pdf](https://github.com/mileszs/wicked_pdf) internally so you can use all its features too.
 
 ## Installation
 
@@ -22,14 +32,65 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'pdf_templator'
+
+html = File.read('path/to/my/template.html')
+# OR
+html = '<html>' \
+       'My name is <field name="name">' \
+       'and today is <field name="date" type="date" data-format="%b %d, %Y">' \
+       '</html>'
+args = {
+  name: 'My Name',
+  date: '06/18/2018',
+}
+
+reader = PdfTemplator::Reader.new(content: html, footer: footer)
+pdf = reader.write(args)
+File.open('path/to/file.pdf', 'wb') { |f| f.write(pdf) }
+```
+
+### Custom types
+
+```ruby
+module PdfTemplator
+  class ListType < Type
+    def call
+      list = content.split(',')
+      html_items = list.map do |item|
+        "<li>#{item}</li>"
+      end
+      "<ul>#{html_items.join}</ul>"
+    end
+  end
+end
+
+# Then you could have an html like
+
+<field name="my_list" type="list"></field>
+
+# And pass the args like
+
+args = {
+  my_list: 'car,helicopter,motorcycle'
+}
+
+```
 
 ## Development
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+After checking out the repo, run `bin/setup` to install dependencies. You can also run `rake console` for an interactive prompt that will allow you to experiment.
 
 To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pdf_templator.
+
+[rubygems-image]: https://badge.fury.io/rb/pdf_templator.svg
+[rubygems-url]: https://badge.fury.io/rb/pdf_templator
+[travis-image]: https://travis-ci.org/Mifiel/pdf-templator.svg?branch=master
+[travis-url]: https://travis-ci.org/Mifiel/pdf-templator
+[coverage-image]: https://coveralls.io/repos/github/Mifiel/pdf-templator/badge.svg?branch=master
+[coverage-url]: https://coveralls.io/github/Mifiel/pdf-templator?branch=master
