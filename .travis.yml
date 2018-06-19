@@ -1,0 +1,16 @@
+language: ruby
+sudo: false
+rvm:
+- 2.1
+- 2.2
+- 2.3
+- 2.4
+- 2.5
+notifications:
+  email:
+    on_success: change
+    on_failure: always
+script:
+- bundle exec rubocop
+- mkdir -p tmp
+- bundle exec rspec

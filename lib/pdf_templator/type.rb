@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PdfTemplator
   class Type
     attr_reader :content
@@ -11,8 +13,8 @@ module PdfTemplator
     # This method is called immediately when a type is found.
     # Override it in sub-classes.
     def call(_value)
-      raise NotImplementedError,
-        "you must override the `call' method for option #{self.class}"
+      fail NotImplementedError,
+           "you must override the `call' method for option #{self.class}"
     end
   end
 end
